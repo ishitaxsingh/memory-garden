@@ -114,9 +114,14 @@ body {
     z-index: 4;
 }
 
+.floating-leaf {
+    animation: leafGrow 3s ease-out forwards, gentleFloat 8s ease-in-out infinite;
+}
+
 .leaf:hover {
     transform: scale(1.05) rotate(5deg);
     box-shadow: 0 6px 12px rgba(44, 85, 48, 0.3);
+    animation-play-state: paused;
 }
 
 .leaf::before {
@@ -134,8 +139,6 @@ body {
     z-index: -1;
 }
 
-
-
 .leaf-content {
     position: absolute;
     top: 50%;
@@ -144,6 +147,7 @@ body {
     width: 85%;
     height: 70%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -154,6 +158,20 @@ body {
     word-wrap: break-word;
     opacity: 0;
     animation: contentFadeIn 1s ease-out 2s forwards;
+}
+
+.memory-text {
+    font-size: 0.6rem;
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+}
+
+.memory-date {
+    font-size: 0.45rem;
+    color: #4a7c59;
+    opacity: 0.8;
+    font-style: italic;
+    margin-top: 0.1rem;
 }
 
 .memory-input-section {
@@ -234,6 +252,9 @@ body {
     top: 2rem;
     right: 2rem;
     z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .water-btn {
@@ -265,6 +286,38 @@ body {
 }
 
 .water-text {
+    font-size: 0.7rem;
+}
+
+.share-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+    border: none;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    color: #2c5530;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+}
+
+.share-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(144, 238, 144, 0.4);
+}
+
+.share-icon {
+    font-size: 1.5rem;
+}
+
+.share-text {
     font-size: 0.7rem;
 }
 

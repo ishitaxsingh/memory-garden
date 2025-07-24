@@ -4,6 +4,10 @@ class DigitalGarden {
         this.plants = JSON.parse(localStorage.getItem('gardenPlants')) || [];
         this.leafCount = 0;
         this.plantCount = 0;
+        // Generate a unique user ID for sharing
+        this.userId = localStorage.getItem('gardenUserId') || this.generateUserId();
+        localStorage.setItem('gardenUserId', this.userId);
+        
         this.quotes = [
             "In the garden of memories, every leaf tells a story of growth.",
             "Water your thoughts with kindness, and watch them bloom.",
@@ -53,17 +57,23 @@ class DigitalGarden {
         this.init();
     }
 
+    generateUserId() {
+        return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
     init() {
         this.setupEventListeners();
         this.loadExistingMemories();
         this.createFloatingParticles();
         this.startPlantGrowth();
+        this.loadSharedGarden(); // Load shared garden on initialization
     }
 
     setupEventListeners() {
         const addMemoryBtn = document.getElementById('addMemoryBtn');
         const memoryInput = document.getElementById('memoryInput');
         const waterBtn = document.getElementById('waterBtn');
+        const shareBtn = document.getElementById('shareBtn');
         const closeQuoteBtn = document.getElementById('closeQuoteBtn');
         const quoteModal = document.getElementById('quoteModal');
 
@@ -76,6 +86,7 @@ class DigitalGarden {
         });
 
         waterBtn.addEventListener('click', () => this.showQuote());
+        shareBtn.addEventListener('click', () => this.shareGarden());
         closeQuoteBtn.addEventListener('click', () => this.hideQuote());
         quoteModal.addEventListener('click', (e) => {
             if (e.target === quoteModal) {
@@ -106,7 +117,15 @@ class DigitalGarden {
         const memory = {
             id: Date.now(),
             text: memoryText,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            userId: this.userId,
+            date: new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
         };
 
         console.log('🌱 Memory object:', memory);
@@ -137,20 +156,33 @@ class DigitalGarden {
             return;
         }
 
-        // Calculate simple leaf position
-        const leafPosition = this.calculateSimpleLeafPosition();
+        // Calculate floating leaf position
+        const leafPosition = this.calculateFloatingLeafPosition();
         console.log('🌿 Leaf position:', leafPosition);
         
         const leaf = document.createElement('div');
-        leaf.className = 'leaf';
+        leaf.className = 'leaf floating-leaf';
         leaf.style.left = `${leafPosition.x}px`;
         leaf.style.top = `${leafPosition.y}px`;
         leaf.style.transform = `rotate(${leafPosition.angle}deg)`;
         leaf.setAttribute('data-memory-id', memory.id);
+        leaf.setAttribute('data-user-id', memory.userId);
 
+        // Create leaf content with date
         const content = document.createElement('div');
         content.className = 'leaf-content';
-        content.textContent = memory.text;
+        
+        // Add memory text
+        const memoryTextElement = document.createElement('div');
+        memoryTextElement.className = 'memory-text';
+        memoryTextElement.textContent = memory.text;
+        content.appendChild(memoryTextElement);
+        
+        // Add date
+        const dateElement = document.createElement('div');
+        dateElement.className = 'memory-date';
+        dateElement.textContent = memory.date;
+        content.appendChild(dateElement);
 
         leaf.appendChild(content);
         plantContainer.appendChild(leaf);
@@ -170,15 +202,15 @@ class DigitalGarden {
 
 
 
-    calculateSimpleLeafPosition() {
+    calculateFloatingLeafPosition() {
         const container = document.getElementById('plantContainer');
         const containerRect = container.getBoundingClientRect();
         
-        // Create a natural distribution across the garden
+        // Create a more natural floating distribution
         const angle = (this.leafCount * 137.5) % 360; // Golden angle
-        const radius = 100 + (this.leafCount * 20); // Growing radius
+        const radius = 80 + (this.leafCount * 15); // Smaller radius for floating
         const x = containerRect.width / 2 + Math.cos(angle * Math.PI / 180) * radius;
-        const y = containerRect.height - 100 - (this.leafCount * 15);
+        const y = containerRect.height / 2 + Math.sin(angle * Math.PI / 180) * radius;
         const rotation = (this.leafCount * 30) % 360; // Natural rotation
         
         return { x, y, angle: rotation };
@@ -411,6 +443,60 @@ class DigitalGarden {
         localStorage.setItem('gardenMemories', JSON.stringify(this.memories));
     }
 
+    shareGarden() {
+        // Create a simple sharing mechanism using URL parameters
+        const gardenData = {
+            memories: this.memories,
+            userId: this.userId
+        };
+        
+        // Encode the garden data
+        const encodedData = btoa(JSON.stringify(gardenData));
+        const shareUrl = `${window.location.origin}${window.location.pathname}?garden=${encodedData}`;
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            this.showGentleMessage('Garden link copied! Share with friends... 🌿');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = shareUrl;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            this.showGentleMessage('Garden link copied! Share with friends... 🌿');
+        });
+    }
+
+    loadSharedGarden() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gardenParam = urlParams.get('garden');
+        
+        if (gardenParam) {
+            try {
+                const gardenData = JSON.parse(atob(gardenParam));
+                if (gardenData.memories && gardenData.memories.length > 0) {
+                    // Load shared memories
+                    this.memories = [...this.memories, ...gardenData.memories];
+                    this.saveMemories();
+                    
+                    // Clear existing leaves and reload
+                    const plantContainer = document.getElementById('plantContainer');
+                    if (plantContainer) {
+                        plantContainer.innerHTML = '';
+                    }
+                    
+                    this.leafCount = 0;
+                    this.loadExistingMemories();
+                    
+                    this.showGentleMessage('Shared garden memories added to your garden... 🌱');
+                }
+            } catch (error) {
+                console.error('Error loading shared garden:', error);
+            }
+        }
+    }
 
 }
 
