@@ -59,28 +59,47 @@ body {
 }
 
 .garden-ground {
-    display: none; /* Remove ground completely */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: linear-gradient(180deg, 
+        rgba(139, 69, 19, 0.1) 0%,
+        rgba(160, 82, 45, 0.2) 50%,
+        rgba(101, 67, 33, 0.3) 100%);
+    z-index: 2;
 }
 
 .soil-texture {
-    display: none; /* Remove soil texture */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(101, 67, 33, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(101, 67, 33, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 40%, rgba(101, 67, 33, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px, 30px 30px, 20px 20px;
 }
 
 .plant-container {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full height since no ground */
+    height: 60vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     z-index: 3;
+    padding-bottom: 2rem;
     overflow: hidden;
 }
 
 .leaf {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(135deg, 
         #8B4513 0%, 
         #A0522D 30%, 
@@ -90,28 +109,29 @@ body {
     transform-origin: center;
     animation: seedGrow 3s ease-out forwards;
     box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
-    cursor: pointer;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%2387CEEB"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'), auto;
     transition: all 0.3s ease;
     z-index: 4;
+    bottom: 0;
 }
 
 .floating-leaf {
-    animation: seedGrow 3s ease-out forwards, gentleFloat 8s ease-in-out infinite;
+    animation: seedGrow 3s ease-out forwards;
 }
 
 .leaf:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4);
+    transform: scale(1.2);
+    box-shadow: 0 8px 16px rgba(139, 69, 19, 0.5);
     animation-play-state: paused;
 }
 
 .leaf::before {
     content: '';
     position: absolute;
-    top: 8px;
-    left: 8px;
-    width: 44px;
-    height: 44px;
+    top: 6px;
+    left: 6px;
+    width: 38px;
+    height: 38px;
     background: linear-gradient(135deg, 
         rgba(139, 69, 19, 0.8) 0%, 
         rgba(160, 82, 45, 0.6) 50%, 
@@ -132,7 +152,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 0.5rem;
+    font-size: 0.4rem;
     color: #2c5530;
     line-height: 1.2;
     overflow: hidden;
@@ -142,14 +162,14 @@ body {
 }
 
 .memory-text {
-    font-size: 0.5rem;
+    font-size: 0.4rem;
     margin-bottom: 0.1rem;
     font-weight: 500;
     color: #8B4513;
 }
 
 .memory-date {
-    font-size: 0.4rem;
+    font-size: 0.35rem;
     color: #A0522D;
     opacity: 0.9;
     font-style: italic;
@@ -266,6 +286,13 @@ body {
 
 .water-text {
     font-size: 0.7rem;
+}
+
+.share-section {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 20;
 }
 
 .share-btn {
@@ -527,6 +554,7 @@ body {
     animation: plantGrow 2s ease-out forwards;
     box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
     z-index: 5;
+    bottom: 0;
 }
 
 .plant::before {
@@ -559,15 +587,15 @@ body {
 
 @keyframes seedGrow {
     0% {
-        transform: scale(0) rotate(0deg);
+        transform: scale(0) translateY(20px);
         opacity: 0;
     }
     50% {
-        transform: scale(0.8) rotate(180deg);
+        transform: scale(0.8) translateY(10px);
         opacity: 0.8;
     }
     100% {
-        transform: scale(1) rotate(360deg);
+        transform: scale(1) translateY(0);
         opacity: 1;
     }
 }

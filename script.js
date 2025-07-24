@@ -72,6 +72,7 @@ class DigitalGarden {
     setupEventListeners() {
         const addMemoryBtn = document.getElementById('addMemoryBtn');
         const memoryInput = document.getElementById('memoryInput');
+        const shareBtn = document.getElementById('shareBtn');
         const closeQuoteBtn = document.getElementById('closeQuoteBtn');
         const quoteModal = document.getElementById('quoteModal');
 
@@ -83,6 +84,7 @@ class DigitalGarden {
             }
         });
 
+        shareBtn.addEventListener('click', () => this.shareGarden());
         closeQuoteBtn.addEventListener('click', () => this.hideQuote());
         quoteModal.addEventListener('click', (e) => {
             if (e.target === quoteModal) {
@@ -152,15 +154,14 @@ class DigitalGarden {
             return;
         }
 
-        // Calculate floating seed position
-        const seedPosition = this.calculateFloatingSeedPosition();
+        // Calculate seed position in ground
+        const seedPosition = this.calculateSeedPosition();
         console.log('🌱 Seed position:', seedPosition);
         
         const seed = document.createElement('div');
         seed.className = 'leaf floating-leaf';
         seed.style.left = `${seedPosition.x}px`;
-        seed.style.top = `${seedPosition.y}px`;
-        seed.style.transform = `rotate(${seedPosition.angle}deg)`;
+        seed.style.bottom = '0px'; // Embed in ground
         seed.setAttribute('data-memory-id', memory.id);
         seed.setAttribute('data-user-id', memory.userId);
         seed.setAttribute('data-is-seed', 'true');
@@ -184,10 +185,10 @@ class DigitalGarden {
         seed.appendChild(content);
         plantContainer.appendChild(seed);
 
-        console.log('🌱 Seed created and added to garden');
+        console.log('🌱 Seed created and embedded in ground');
 
-        // Add click event for seed selection
-        seed.addEventListener('click', () => this.selectSeed(seed, memory));
+        // Add click event for seed growth
+        seed.addEventListener('click', () => this.growSeed(seed, memory));
         seed.addEventListener('mouseenter', () => this.showSeedReflection(memory));
         seed.addEventListener('mouseleave', () => this.hideSeedReflection());
 
@@ -198,73 +199,33 @@ class DigitalGarden {
         this.playGentleSound();
     }
 
-    selectSeed(seed, memory) {
-        // Show water can
-        this.showWaterCan();
-        
-        // Store selected seed
-        this.selectedSeed = { element: seed, memory: memory };
-        
-        // Highlight the selected seed
-        seed.style.transform = 'scale(1.2) rotate(5deg)';
-        seed.style.boxShadow = '0 8px 16px rgba(139, 69, 19, 0.5)';
-        
-        this.showGentleMessage('Click the water can to grow this seed into a plant... 🌱');
-    }
-
-    showWaterCan() {
-        // Create water can if it doesn't exist
-        if (!this.waterCan) {
-            this.waterCan = document.createElement('button');
-            this.waterCan.className = 'water-can';
-            this.waterCan.innerHTML = '🚿';
-            this.waterCan.addEventListener('click', () => this.waterSeed());
-            document.body.appendChild(this.waterCan);
-        }
-        
-        this.waterCan.style.display = 'block';
-    }
-
-    hideWaterCan() {
-        if (this.waterCan) {
-            this.waterCan.style.display = 'none';
-        }
-    }
-
-    waterSeed() {
-        if (!this.selectedSeed) return;
-        
-        const { element: seed, memory } = this.selectedSeed;
+    growSeed(seed, memory) {
         const plantContainer = document.getElementById('plantContainer');
         
         // Get seed position
         const rect = seed.getBoundingClientRect();
         const containerRect = plantContainer.getBoundingClientRect();
         const x = rect.left - containerRect.left + rect.width / 2;
-        const y = rect.top - containerRect.top + rect.height / 2;
         
         // Remove the seed
         seed.remove();
         
         // Create plant
-        this.createPlant(memory, x, y);
+        this.createPlant(memory, x);
         
-        // Hide water can
-        this.hideWaterCan();
-        
-        // Clear selection
-        this.selectedSeed = null;
+        // Show reflection quote
+        this.showGrowthReflection(memory);
         
         this.showGentleMessage('Seed has grown into a beautiful plant! 🌿');
         this.playGentleSound();
     }
 
-    createPlant(memory, x, y) {
+    createPlant(memory, x) {
         const plantContainer = document.getElementById('plantContainer');
         const plant = document.createElement('div');
         plant.className = 'plant';
         plant.style.left = `${x - 60}px`; // Center the plant
-        plant.style.top = `${y - 75}px`; // Position above where seed was
+        plant.style.bottom = '0px'; // Plant grows from ground
         
         // Create plant content
         const content = document.createElement('div');
@@ -293,7 +254,7 @@ class DigitalGarden {
         plant.addEventListener('mouseleave', () => this.hidePlantReflection());
     }
 
-    showSeedReflection(memory) {
+    showGrowthReflection(memory) {
         const reflection = this.leafReflections[memory.id % this.leafReflections.length];
         const memoryText = memory.text;
         const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
@@ -310,6 +271,40 @@ class DigitalGarden {
             <div class="reflection-memory">"${memoryText}"</div>
             <div class="reflection-date">${memoryDate}</div>
             <div class="reflection-text">${reflection}</div>
+        `;
+        
+        document.body.appendChild(reflectionModal);
+        
+        // Show with gentle animation
+        setTimeout(() => {
+            reflectionModal.style.display = 'block';
+            reflectionModal.style.opacity = '0';
+            reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(() => {
+                reflectionModal.style.transition = 'all 0.3s ease';
+                reflectionModal.style.opacity = '1';
+                reflectionModal.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10);
+        }, 100);
+    }
+
+    showSeedReflection(memory) {
+        const memoryText = memory.text;
+        const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const reflectionModal = document.createElement('div');
+        reflectionModal.className = 'leaf-reflection-modal';
+        reflectionModal.innerHTML = `
+            <div class="reflection-memory">"${memoryText}"</div>
+            <div class="reflection-date">${memoryDate}</div>
+            <div class="reflection-text">Click to water this seed and watch it grow into a beautiful plant!</div>
         `;
         
         document.body.appendChild(reflectionModal);
@@ -391,18 +386,16 @@ class DigitalGarden {
         }
     }
 
-    calculateFloatingSeedPosition() {
+    calculateSeedPosition() {
         const container = document.getElementById('plantContainer');
         const containerRect = container.getBoundingClientRect();
         
-        // Create a more natural floating distribution for seeds
+        // Create a natural distribution across the ground
         const angle = (this.leafCount * 137.5) % 360; // Golden angle
-        const radius = 100 + (this.leafCount * 20); // Growing radius
+        const radius = 150 + (this.leafCount * 30); // Growing radius
         const x = containerRect.width / 2 + Math.cos(angle * Math.PI / 180) * radius;
-        const y = containerRect.height / 2 + Math.sin(angle * Math.PI / 180) * radius;
-        const rotation = (this.leafCount * 30) % 360; // Natural rotation
         
-        return { x, y, angle: rotation };
+        return { x };
     }
 
     loadExistingMemories() {
@@ -639,7 +632,7 @@ class DigitalGarden {
                     this.memories = [...this.memories, ...gardenData.memories];
                     this.saveMemories();
                     
-                    // Clear existing leaves and reload
+                    // Clear existing seeds and reload
                     const plantContainer = document.getElementById('plantContainer');
                     if (plantContainer) {
                         plantContainer.innerHTML = '';
@@ -648,7 +641,7 @@ class DigitalGarden {
                     this.leafCount = 0;
                     this.loadExistingMemories();
                     
-                    this.showGentleMessage('Shared garden memories added to your garden... 🌱');
+                    this.showGentleMessage('Shared garden seeds added to your garden... 🌱');
                 }
             } catch (error) {
                 console.error('Error loading shared garden:', error);

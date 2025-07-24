@@ -67,28 +67,47 @@
         }
 
         .garden-ground {
-            display: none; /* Remove ground completely */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40vh;
+            background: linear-gradient(180deg, 
+                rgba(139, 69, 19, 0.1) 0%,
+                rgba(160, 82, 45, 0.2) 50%,
+                rgba(101, 67, 33, 0.3) 100%);
+            z-index: 2;
         }
 
         .soil-texture {
-            display: none; /* Remove soil texture */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(101, 67, 33, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 80% 20%, rgba(101, 67, 33, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 40%, rgba(101, 67, 33, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 20px 20px;
         }
 
         .plant-container {
             position: relative;
             width: 100%;
-            height: 100vh; /* Full height since no ground */
+            height: 60vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
             z-index: 3;
+            padding-bottom: 2rem;
             overflow: hidden;
         }
 
         .leaf {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, 
                 #8B4513 0%, 
                 #A0522D 30%, 
@@ -98,28 +117,29 @@
             transform-origin: center;
             animation: seedGrow 3s ease-out forwards;
             box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
-            cursor: pointer;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%2387CEEB"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'), auto;
             transition: all 0.3s ease;
             z-index: 4;
+            bottom: 0;
         }
 
         .floating-leaf {
-            animation: seedGrow 3s ease-out forwards, gentleFloat 8s ease-in-out infinite;
+            animation: seedGrow 3s ease-out forwards;
         }
 
         .leaf:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4);
+            transform: scale(1.2);
+            box-shadow: 0 8px 16px rgba(139, 69, 19, 0.5);
             animation-play-state: paused;
         }
 
         .leaf::before {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 44px;
-            height: 44px;
+            top: 6px;
+            left: 6px;
+            width: 38px;
+            height: 38px;
             background: linear-gradient(135deg, 
                 rgba(139, 69, 19, 0.8) 0%, 
                 rgba(160, 82, 45, 0.6) 50%, 
@@ -140,7 +160,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 0.5rem;
+            font-size: 0.4rem;
             color: #2c5530;
             line-height: 1.2;
             overflow: hidden;
@@ -150,14 +170,14 @@
         }
 
         .memory-text {
-            font-size: 0.5rem;
+            font-size: 0.4rem;
             margin-bottom: 0.1rem;
             font-weight: 500;
             color: #8B4513;
         }
 
         .memory-date {
-            font-size: 0.4rem;
+            font-size: 0.35rem;
             color: #A0522D;
             opacity: 0.9;
             font-style: italic;
@@ -464,15 +484,15 @@
 
         @keyframes seedGrow {
             0% {
-                transform: scale(0) rotate(0deg);
+                transform: scale(0) translateY(20px);
                 opacity: 0;
             }
             50% {
-                transform: scale(0.8) rotate(180deg);
+                transform: scale(0.8) translateY(10px);
                 opacity: 0.8;
             }
             100% {
-                transform: scale(1) rotate(360deg);
+                transform: scale(1) translateY(0);
                 opacity: 1;
             }
         }
@@ -490,6 +510,90 @@
                 transform: scale(1) translateY(0);
                 opacity: 1;
             }
+        }
+
+        .share-section {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 20;
+        }
+
+        .share-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            color: #2c5530;
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(144, 238, 144, 0.4);
+        }
+
+        .share-icon {
+            font-size: 1.5rem;
+        }
+
+        .share-text {
+            font-size: 0.7rem;
+        }
+
+        .plant {
+            position: absolute;
+            width: 120px;
+            height: 150px;
+            background: linear-gradient(135deg, 
+                #228B22 0%, 
+                #32CD32 30%, 
+                #90EE90 70%, 
+                #98FB98 100%);
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            animation: plantGrow 2s ease-out forwards;
+            box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
+            z-index: 5;
+            bottom: 0;
+        }
+
+        .plant::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 60px;
+            background: linear-gradient(180deg, #228B22 0%, #32CD32 100%);
+            border-radius: 4px;
+        }
+
+        .plant::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(135deg, 
+                rgba(34, 139, 34, 0.8) 0%, 
+                rgba(50, 205, 50, 0.6) 50%, 
+                rgba(144, 238, 144, 0.4) 100%);
+            border-radius: 50% 50% 0 0;
+            z-index: -1;
         }
 
         @media (max-width: 768px) {
@@ -552,10 +656,17 @@
                     class="memory-textarea"
                 ></textarea>
                 <button id="addMemoryBtn" class="add-memory-btn">
-                    <span class="btn-text">Plant Memory</span>
+                    <span class="btn-text">Plant Seed</span>
                     <span class="btn-icon">🌱</span>
                 </button>
             </div>
+        </div>
+
+        <div class="share-section">
+            <button id="shareBtn" class="share-btn">
+                <span class="share-icon">🌿</span>
+                <span class="share-text">Share Garden</span>
+            </button>
         </div>
 
         <div class="water-section">
@@ -656,6 +767,7 @@
             setupEventListeners() {
                 const addMemoryBtn = document.getElementById('addMemoryBtn');
                 const memoryInput = document.getElementById('memoryInput');
+                const shareBtn = document.getElementById('shareBtn');
                 const closeQuoteBtn = document.getElementById('closeQuoteBtn');
                 const quoteModal = document.getElementById('quoteModal');
 
@@ -667,6 +779,7 @@
                     }
                 });
 
+                shareBtn.addEventListener('click', () => this.shareGarden());
                 closeQuoteBtn.addEventListener('click', () => this.hideQuote());
                 quoteModal.addEventListener('click', (e) => {
                     if (e.target === quoteModal) {
@@ -713,7 +826,7 @@
                             this.memories = [...this.memories, ...gardenData.memories];
                             this.saveMemories();
                             
-                            // Clear existing leaves and reload
+                            // Clear existing seeds and reload
                             const plantContainer = document.getElementById('plantContainer');
                             if (plantContainer) {
                                 plantContainer.innerHTML = '';
@@ -722,7 +835,7 @@
                             this.leafCount = 0;
                             this.loadExistingMemories();
                             
-                            this.showGentleMessage('Shared garden memories added to your garden... 🌱');
+                            this.showGentleMessage('Shared garden seeds added to your garden... 🌱');
                         }
                     } catch (error) {
                         console.error('Error loading shared garden:', error);
@@ -789,15 +902,14 @@
                     return;
                 }
 
-                // Calculate floating seed position
-                const seedPosition = this.calculateFloatingSeedPosition();
+                // Calculate seed position in ground
+                const seedPosition = this.calculateSeedPosition();
                 console.log('🌱 Seed position:', seedPosition);
                 
                 const seed = document.createElement('div');
                 seed.className = 'leaf floating-leaf';
                 seed.style.left = `${seedPosition.x}px`;
-                seed.style.top = `${seedPosition.y}px`;
-                seed.style.transform = `rotate(${seedPosition.angle}deg)`;
+                seed.style.bottom = '0px'; // Embed in ground
                 seed.setAttribute('data-memory-id', memory.id);
                 seed.setAttribute('data-user-id', memory.userId);
                 seed.setAttribute('data-is-seed', 'true');
@@ -821,10 +933,10 @@
                 seed.appendChild(content);
                 plantContainer.appendChild(seed);
 
-                console.log('🌱 Seed created and added to garden');
+                console.log('🌱 Seed created and embedded in ground');
 
-                // Add click event for seed selection
-                seed.addEventListener('click', () => this.selectSeed(seed, memory));
+                // Add click event for seed growth
+                seed.addEventListener('click', () => this.growSeed(seed, memory));
                 seed.addEventListener('mouseenter', () => this.showSeedReflection(memory));
                 seed.addEventListener('mouseleave', () => this.hideSeedReflection());
 
@@ -835,73 +947,33 @@
                 this.playGentleSound();
             }
 
-            selectSeed(seed, memory) {
-                // Show water can
-                this.showWaterCan();
-                
-                // Store selected seed
-                this.selectedSeed = { element: seed, memory: memory };
-                
-                // Highlight the selected seed
-                seed.style.transform = 'scale(1.2) rotate(5deg)';
-                seed.style.boxShadow = '0 8px 16px rgba(139, 69, 19, 0.5)';
-                
-                this.showGentleMessage('Click the water can to grow this seed into a plant... 🌱');
-            }
-
-            showWaterCan() {
-                // Create water can if it doesn't exist
-                if (!this.waterCan) {
-                    this.waterCan = document.createElement('button');
-                    this.waterCan.className = 'water-can';
-                    this.waterCan.innerHTML = '🚿';
-                    this.waterCan.addEventListener('click', () => this.waterSeed());
-                    document.body.appendChild(this.waterCan);
-                }
-                
-                this.waterCan.style.display = 'block';
-            }
-
-            hideWaterCan() {
-                if (this.waterCan) {
-                    this.waterCan.style.display = 'none';
-                }
-            }
-
-            waterSeed() {
-                if (!this.selectedSeed) return;
-                
-                const { element: seed, memory } = this.selectedSeed;
+            growSeed(seed, memory) {
                 const plantContainer = document.getElementById('plantContainer');
                 
                 // Get seed position
                 const rect = seed.getBoundingClientRect();
                 const containerRect = plantContainer.getBoundingClientRect();
                 const x = rect.left - containerRect.left + rect.width / 2;
-                const y = rect.top - containerRect.top + rect.height / 2;
                 
                 // Remove the seed
                 seed.remove();
                 
                 // Create plant
-                this.createPlant(memory, x, y);
+                this.createPlant(memory, x);
                 
-                // Hide water can
-                this.hideWaterCan();
-                
-                // Clear selection
-                this.selectedSeed = null;
+                // Show reflection quote
+                this.showGrowthReflection(memory);
                 
                 this.showGentleMessage('Seed has grown into a beautiful plant! 🌿');
                 this.playGentleSound();
             }
 
-            createPlant(memory, x, y) {
+            createPlant(memory, x) {
                 const plantContainer = document.getElementById('plantContainer');
                 const plant = document.createElement('div');
                 plant.className = 'plant';
                 plant.style.left = `${x - 60}px`; // Center the plant
-                plant.style.top = `${y - 75}px`; // Position above where seed was
+                plant.style.bottom = '0px'; // Plant grows from ground
                 
                 // Create plant content
                 const content = document.createElement('div');
@@ -930,7 +1002,7 @@
                 plant.addEventListener('mouseleave', () => this.hidePlantReflection());
             }
 
-            showSeedReflection(memory) {
+            showGrowthReflection(memory) {
                 const reflection = this.leafReflections[memory.id % this.leafReflections.length];
                 const memoryText = memory.text;
                 const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
@@ -947,6 +1019,40 @@
                     <div class="reflection-memory">"${memoryText}"</div>
                     <div class="reflection-date">${memoryDate}</div>
                     <div class="reflection-text">${reflection}</div>
+                `;
+                
+                document.body.appendChild(reflectionModal);
+                
+                // Show with gentle animation
+                setTimeout(() => {
+                    reflectionModal.style.display = 'block';
+                    reflectionModal.style.opacity = '0';
+                    reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                    
+                    setTimeout(() => {
+                        reflectionModal.style.transition = 'all 0.3s ease';
+                        reflectionModal.style.opacity = '1';
+                        reflectionModal.style.transform = 'translate(-50%, -50%) scale(1)';
+                    }, 10);
+                }, 100);
+            }
+
+            showSeedReflection(memory) {
+                const memoryText = memory.text;
+                const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const reflectionModal = document.createElement('div');
+                reflectionModal.className = 'leaf-reflection-modal';
+                reflectionModal.innerHTML = `
+                    <div class="reflection-memory">"${memoryText}"</div>
+                    <div class="reflection-date">${memoryDate}</div>
+                    <div class="reflection-text">Click to water this seed and watch it grow into a beautiful plant!</div>
                 `;
                 
                 document.body.appendChild(reflectionModal);
@@ -1028,18 +1134,16 @@
                 }
             }
 
-            calculateFloatingSeedPosition() {
+            calculateSeedPosition() {
                 const container = document.getElementById('plantContainer');
                 const containerRect = container.getBoundingClientRect();
                 
-                // Create a more natural floating distribution for seeds
+                // Create a natural distribution across the ground
                 const angle = (this.leafCount * 137.5) % 360; // Golden angle
-                const radius = 100 + (this.leafCount * 20); // Growing radius
+                const radius = 150 + (this.leafCount * 30); // Growing radius
                 const x = containerRect.width / 2 + Math.cos(angle * Math.PI / 180) * radius;
-                const y = containerRect.height / 2 + Math.sin(angle * Math.PI / 180) * radius;
-                const rotation = (this.leafCount * 30) % 360; // Natural rotation
                 
-                return { x, y, angle: rotation };
+                return { x };
             }
 
             loadExistingMemories() {
