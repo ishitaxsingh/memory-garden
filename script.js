@@ -73,7 +73,6 @@ class DigitalGarden {
         const addMemoryBtn = document.getElementById('addMemoryBtn');
         const memoryInput = document.getElementById('memoryInput');
         const waterBtn = document.getElementById('waterBtn');
-        const shareBtn = document.getElementById('shareBtn');
         const closeQuoteBtn = document.getElementById('closeQuoteBtn');
         const quoteModal = document.getElementById('quoteModal');
 
@@ -86,7 +85,6 @@ class DigitalGarden {
         });
 
         waterBtn.addEventListener('click', () => this.showQuote());
-        shareBtn.addEventListener('click', () => this.shareGarden());
         closeQuoteBtn.addEventListener('click', () => this.hideQuote());
         quoteModal.addEventListener('click', (e) => {
             if (e.target === quoteModal) {
@@ -228,25 +226,36 @@ class DigitalGarden {
     showLeafReflection(memory) {
         const reflection = this.leafReflections[memory.id % this.leafReflections.length];
         const memoryText = memory.text;
+        const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
         
         const reflectionModal = document.createElement('div');
         reflectionModal.className = 'leaf-reflection-modal';
         reflectionModal.innerHTML = `
-            <div class="reflection-content">
-                <div class="reflection-memory">"${memoryText}"</div>
-                <div class="reflection-text">${reflection}</div>
-            </div>
+            <div class="reflection-memory">"${memoryText}"</div>
+            <div class="reflection-date">${memoryDate}</div>
+            <div class="reflection-text">${reflection}</div>
         `;
         
         document.body.appendChild(reflectionModal);
         
-        // Position near the leaf
-        const leaf = document.querySelector(`[data-memory-id="${memory.id}"]`);
-        if (leaf) {
-            const rect = leaf.getBoundingClientRect();
-            reflectionModal.style.left = `${rect.left + rect.width + 10}px`;
-            reflectionModal.style.top = `${rect.top}px`;
-        }
+        // Show with gentle animation
+        setTimeout(() => {
+            reflectionModal.style.display = 'block';
+            reflectionModal.style.opacity = '0';
+            reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(() => {
+                reflectionModal.style.transition = 'all 0.3s ease';
+                reflectionModal.style.opacity = '1';
+                reflectionModal.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10);
+        }, 100);
     }
 
     hideLeafReflection() {
@@ -545,6 +554,12 @@ style.textContent = `
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
         color: #5a7c65;
+    }
+
+    .reflection-date {
+        font-size: 0.7rem;
+        color: #888;
+        margin-bottom: 0.5rem;
     }
 
     .reflection-text {
