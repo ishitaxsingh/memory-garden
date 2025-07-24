@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Accept visual language and UX terms in prompts, and map them to appropriate code.
+# For example: 
+# "smooth animation" → use easing functions like ease-in-out;
+# "rounded friendly UI" → use border-radius and soft shadows;
+# "elegant layout" → use white space, alignment, and typography adjustments.
+# If the user describes UI like “like Material Design” or “like After Effects easing,” use those design systems as references.

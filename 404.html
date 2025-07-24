@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Digital Garden</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: #2c5530;
+            margin-bottom: 1rem;
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+        
+        .error-subtitle {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            color: #5a7c65;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .error-message {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1rem;
+            color: #2c5530;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+            border: none;
+            border-radius: 25px;
+            color: #2c5530;
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(144, 238, 144, 0.4);
+        }
+        
+        .floating-leaves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-leaf {
+            position: absolute;
+            width: 20px;
+            height: 15px;
+            background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+            border-radius: 0 50% 50% 50%;
+            animation: floatLeaf 8s infinite linear;
+            opacity: 0.6;
+        }
+        
+        .floating-leaf:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-leaf:nth-child(2) {
+            left: 30%;
+            animation-delay: 2s;
+        }
+        
+        .floating-leaf:nth-child(3) {
+            left: 70%;
+            animation-delay: 4s;
+        }
+        
+        .floating-leaf:nth-child(4) {
+            left: 90%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes floatLeaf {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="garden-container">
+        <div class="sky-gradient"></div>
+        
+        <div class="floating-leaves">
+            <div class="floating-leaf"></div>
+            <div class="floating-leaf"></div>
+            <div class="floating-leaf"></div>
+            <div class="floating-leaf"></div>
+        </div>
+        
+        <div class="error-container">
+            <h1 class="error-title">404</h1>
+            <h2 class="error-subtitle">Page Not Found</h2>
+            <p class="error-message">
+                It seems this path in the garden doesn't exist yet. 
+                Perhaps the memory you're looking for hasn't been planted, 
+                or it's growing in a different part of your garden.
+            </p>
+            <a href="/" class="home-btn">
+                <span>🌱</span>
+                <span>Return to Garden</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Always assume the user has no or very little coding experience.
+# Explain what the code does in plain English with clear comments.
+# Keep code snippets short, modular, and copy-paste ready.
+# Offer next-step suggestions after generating code (e.g., how to preview, test, or deploy).
+# If a tool or platform is mentioned (Figma, Illustrator, Web), match the output accordingly.
+# When asked to generate code, also provide setup or installation instructions when needed.
+# Do not use complex jargon unless explained in simple language.
+# Keep the code modular and extensible as the user will keep adding new features one by one.
+# Always plan and discuss each feature before jumping into code editing
+# Explain the "How" for Future Changes
+# Never assume anything! Always aks questions to clarify the requirements and always suggest alternative approaches.

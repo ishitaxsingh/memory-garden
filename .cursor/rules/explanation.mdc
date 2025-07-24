@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Always add inline comments in the code to explain what each block is doing.
+# Include a high-level summary before the code if the prompt is non-technical.
+# When a new concept (like ‘event listener’ or ‘manifest file’) is introduced, explain it in 1-2 simple sentences.
+# Avoid assumptions that the user knows what a terminal, npm, or node is — explain setup step by step.

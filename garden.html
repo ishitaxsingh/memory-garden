@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Garden of Memories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 50%, #f5f5dc 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #2c5530;
+        }
+
+        .garden-container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sky-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60vh;
+            background: linear-gradient(180deg, 
+                rgba(173, 216, 230, 0.3) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(144, 238, 144, 0.1) 100%);
+            z-index: 1;
+        }
+
+        .garden-header {
+            text-align: center;
+            padding: 2rem 1rem;
+            z-index: 10;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .garden-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #2c5530;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(44, 85, 48, 0.1);
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+
+        .garden-subtitle {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #5a7c65;
+            opacity: 0.8;
+        }
+
+        .garden-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40vh;
+            background: linear-gradient(180deg, 
+                rgba(139, 69, 19, 0.1) 0%,
+                rgba(160, 82, 45, 0.2) 50%,
+                rgba(101, 67, 33, 0.3) 100%);
+            z-index: 2;
+        }
+
+        .soil-texture {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(101, 67, 33, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 80% 20%, rgba(101, 67, 33, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 40%, rgba(101, 67, 33, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px, 20px 20px;
+        }
+
+        .plant-container {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 5;
+            padding-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .plant-stem {
+            position: absolute;
+            z-index: 3;
+        }
+
+        .main-stem {
+            width: 8px;
+            height: 200px;
+            background: linear-gradient(180deg, #228B22 0%, #32CD32 50%, #228B22 100%);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(44, 85, 48, 0.1);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 100px;
+            height: 70px;
+            background: linear-gradient(135deg, 
+                #90EE90 0%, 
+                #98FB98 30%, 
+                #9ACD32 70%, 
+                #6B8E23 100%);
+            border-radius: 0 50% 50% 50%;
+            transform-origin: 0 50%;
+            animation: leafGrow 3s ease-out forwards;
+            box-shadow: 0 4px 8px rgba(44, 85, 48, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 4;
+        }
+
+        .leaf:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 6px 12px rgba(44, 85, 48, 0.3);
+        }
+
+        .leaf::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 84px;
+            height: 54px;
+            background: linear-gradient(135deg, 
+                rgba(144, 238, 144, 0.8) 0%, 
+                rgba(152, 251, 152, 0.6) 50%, 
+                rgba(154, 205, 50, 0.4) 100%);
+            border-radius: 0 40% 40% 40%;
+            z-index: -1;
+        }
+
+        .leaf-stem {
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(180deg, #228B22 0%, #32CD32 50%, #228B22 100%);
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 1px;
+        }
+
+        .leaf-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #2c5530;
+            line-height: 1.2;
+            overflow: hidden;
+            word-wrap: break-word;
+            opacity: 0;
+            animation: contentFadeIn 1s ease-out 2s forwards;
+        }
+
+        .memory-input-section {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(44, 85, 48, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .memory-textarea {
+            flex: 1;
+            min-height: 60px;
+            max-height: 120px;
+            padding: 0.8rem;
+            border: 2px solid rgba(144, 238, 144, 0.3);
+            border-radius: 15px;
+            font-family: 'Crimson Text', serif;
+            font-size: 1rem;
+            color: #2c5530;
+            background: rgba(255, 255, 255, 0.8);
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .memory-textarea:focus {
+            outline: none;
+            border-color: #90EE90;
+            box-shadow: 0 0 0 3px rgba(144, 238, 144, 0.2);
+        }
+
+        .add-memory-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+            border: none;
+            border-radius: 15px;
+            color: #2c5530;
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+        }
+
+        .add-memory-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(144, 238, 144, 0.4);
+        }
+
+        .btn-text {
+            font-size: 0.8rem;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        .water-section {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 20;
+        }
+
+        .water-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            color: #2c5530;
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
+        }
+
+        .water-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(135, 206, 235, 0.4);
+        }
+
+        .water-icon {
+            font-size: 1.5rem;
+        }
+
+        .water-text {
+            font-size: 0.7rem;
+        }
+
+        .quote-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .quote-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(44, 85, 48, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .close-quote-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #5a7c65;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-quote-btn:hover {
+            background: rgba(44, 85, 48, 0.1);
+            color: #2c5530;
+        }
+
+        .leaf-reflection-modal {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(44, 85, 48, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Crimson Text', serif;
+            color: #2c5530;
+            z-index: 1000;
+            max-width: 250px;
+            animation: fadeIn 0.3s ease-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .reflection-memory {
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #5a7c65;
+        }
+
+        .reflection-text {
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(144, 238, 144, 0.3);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        .particle:nth-child(3) {
+            left: 70%;
+            animation-delay: 4s;
+            animation-duration: 14s;
+        }
+
+        .particle:nth-child(4) {
+            left: 80%;
+            animation-delay: 6s;
+            animation-duration: 11s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: 8s;
+            animation-duration: 13s;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes leafGrow {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(0.8) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes contentFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+
+        @media (max-width: 768px) {
+            .garden-title {
+                font-size: 2rem;
+            }
+            
+            .input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .water-btn {
+                width: 60px;
+                height: 60px;
+                padding: 0.5rem;
+            }
+            
+            .water-text {
+                font-size: 0.6rem;
+            }
+            
+            .quote-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .quote-text {
+                font-size: 1.1rem;
+            }
+            
+            .leaf-reflection-modal {
+                max-width: 200px;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="garden-container">
+        <div class="sky-gradient"></div>
+        
+        <header class="garden-header">
+            <h1 class="garden-title">Digital Garden of Memories</h1>
+            <p class="garden-subtitle">Where thoughts bloom like gentle leaves</p>
+        </header>
+
+        <div class="garden-ground">
+            <div class="soil-texture"></div>
+        </div>
+
+        <div class="plant-container" id="plantContainer">
+            <!-- Leaves will be dynamically added here -->
+        </div>
+
+        <div class="memory-input-section">
+            <div class="input-container">
+                <textarea 
+                    id="memoryInput" 
+                    placeholder="Write a memory, thought, or feeling..."
+                    class="memory-textarea"
+                ></textarea>
+                <button id="addMemoryBtn" class="add-memory-btn">
+                    <span class="btn-text">Plant Memory</span>
+                    <span class="btn-icon">🌱</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="water-section">
+            <button id="waterBtn" class="water-btn">
+                <span class="water-icon">💧</span>
+                <span class="water-text">Water Me</span>
+            </button>
+        </div>
+
+        <div id="quoteModal" class="quote-modal">
+            <div class="quote-content">
+                <div class="quote-text" id="quoteText"></div>
+                <button class="close-quote-btn" id="closeQuoteBtn">×</button>
+            </div>
+        </div>
+
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
+    <script>
+        class DigitalGarden {
+            constructor() {
+                this.memories = JSON.parse(localStorage.getItem('gardenMemories')) || [];
+                this.plants = JSON.parse(localStorage.getItem('gardenPlants')) || [];
+                this.leafCount = 0;
+                this.plantCount = 0;
+                this.quotes = [
+                    "In the garden of memories, every leaf tells a story of growth.",
+                    "Water your thoughts with kindness, and watch them bloom.",
+                    "The most beautiful gardens are grown from the seeds of patience.",
+                    "Every memory is a leaf that adds beauty to the tree of life.",
+                    "In stillness, we find the wisdom that grows like gentle leaves.",
+                    "The garden of the heart grows wild with love and tenderness.",
+                    "Each moment is a seed that can grow into something beautiful.",
+                    "Like leaves in the wind, our thoughts dance and find their place.",
+                    "The earth has music for those who listen with their hearts.",
+                    "Growth happens in the quiet spaces between our thoughts.",
+                    "Every leaf that falls makes room for new growth.",
+                    "The garden of memories is watered with tears of joy and sorrow.",
+                    "In the gentle rhythm of nature, we find our own peace.",
+                    "The most precious flowers bloom in the garden of gratitude.",
+                    "Like morning dew, fresh thoughts nourish the soul.",
+                    "Every memory planted with love grows into something beautiful.",
+                    "The garden of the mind flourishes with gentle care.",
+                    "In the soft light of dawn, new possibilities bloom.",
+                    "The heart's garden grows wild with the seeds of hope.",
+                    "Each leaf whispers secrets of growth and renewal."
+                ];
+                
+                this.leafReflections = [
+                    "This memory reminds you of growth and resilience.",
+                    "A gentle reminder that every experience shapes who you are.",
+                    "This thought carries the wisdom of your journey.",
+                    "Like a leaf in the wind, this memory dances with possibility.",
+                    "This reflection holds the quiet strength of your inner garden.",
+                    "A moment of peace that grows more beautiful with time.",
+                    "This memory is a seed of hope that continues to bloom.",
+                    "Like morning dew, this thought nourishes your soul.",
+                    "A gentle whisper of love and understanding.",
+                    "This memory is a bridge between past and future growth.",
+                    "A reminder that every leaf has its own unique beauty.",
+                    "This thought carries the fragrance of your personal journey.",
+                    "Like roots in the earth, this memory grounds you.",
+                    "A gentle breeze of wisdom from your inner garden.",
+                    "This reflection is a testament to your continuous growth.",
+                    "Like sunlight through leaves, this memory illuminates your path.",
+                    "A gentle reminder that growth happens in quiet moments.",
+                    "This thought is a flower that blooms in the garden of your mind.",
+                    "Like a leaf that turns toward the sun, this memory guides you.",
+                    "A gentle whisper of the wisdom you carry within."
+                ];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadExistingMemories();
+                this.createFloatingParticles();
+            }
+
+            setupEventListeners() {
+                const addMemoryBtn = document.getElementById('addMemoryBtn');
+                const memoryInput = document.getElementById('memoryInput');
+                const waterBtn = document.getElementById('waterBtn');
+                const closeQuoteBtn = document.getElementById('closeQuoteBtn');
+                const quoteModal = document.getElementById('quoteModal');
+
+                addMemoryBtn.addEventListener('click', () => this.addMemory());
+                memoryInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.addMemory();
+                    }
+                });
+
+                waterBtn.addEventListener('click', () => this.showQuote());
+                closeQuoteBtn.addEventListener('click', () => this.hideQuote());
+                quoteModal.addEventListener('click', (e) => {
+                    if (e.target === quoteModal) {
+                        this.hideQuote();
+                    }
+                });
+            }
+
+            addMemory() {
+                const memoryInput = document.getElementById('memoryInput');
+                const memoryText = memoryInput.value.trim();
+
+                if (memoryText === '') {
+                    this.showGentleMessage('Please write something to plant...');
+                    return;
+                }
+
+                this.createMemory(memoryText);
+            }
+
+            createMemory(memoryText) {
+                const memory = {
+                    id: Date.now(),
+                    text: memoryText,
+                    timestamp: new Date().toISOString(),
+                    plantId: this.getCurrentPlantId(),
+                    leafIndex: this.getLeafCountForPlant(this.getCurrentPlantId())
+                };
+
+                this.memories.push(memory);
+                this.saveMemories();
+                this.createLeaf(memory);
+                
+                const memoryInput = document.getElementById('memoryInput');
+                if (memoryInput) {
+                    memoryInput.value = '';
+                }
+                
+                this.showGentleMessage('Memory planted with love...');
+            }
+
+            getCurrentPlantId() {
+                if (this.plants.length === 0 || this.getLeafCountForPlant(this.plants[this.plants.length - 1].id) >= 5) {
+                    return this.createNewPlant();
+                }
+                return this.plants[this.plants.length - 1].id;
+            }
+
+            createNewPlant() {
+                const plantId = Date.now();
+                const plant = {
+                    id: plantId,
+                    position: this.calculatePlantPosition(),
+                    createdAt: new Date().toISOString()
+                };
+                this.plants.push(plant);
+                this.savePlants();
+                this.plantCount++;
+                return plantId;
+            }
+
+            calculatePlantPosition() {
+                const container = document.getElementById('plantContainer');
+                const containerRect = container.getBoundingClientRect();
+                
+                const x = 100 + (this.plantCount * 200) + (Math.random() * 100 - 50);
+                const y = containerRect.height - 150;
+                
+                return { x, y };
+            }
+
+            getLeafCountForPlant(plantId) {
+                return this.memories.filter(memory => memory.plantId === plantId).length;
+            }
+
+            createLeaf(memory) {
+                const plantContainer = document.getElementById('plantContainer');
+                const plant = this.plants.find(p => p.id === memory.plantId);
+                
+                if (!plant) return;
+
+                let plantElement = document.querySelector(`[data-plant-id="${memory.plantId}"]`);
+                if (!plantElement) {
+                    plantElement = this.createPlantStem(plant);
+                }
+
+                const leafPosition = this.calculateLeafPositionOnStem(memory.leafIndex, plant);
+                
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.left = `${leafPosition.x}px`;
+                leaf.style.top = `${leafPosition.y}px`;
+                leaf.style.transform = `rotate(${leafPosition.angle}deg)`;
+                leaf.setAttribute('data-memory-id', memory.id);
+
+                const stem = document.createElement('div');
+                stem.className = 'leaf-stem';
+
+                const content = document.createElement('div');
+                content.className = 'leaf-content';
+                content.textContent = memory.text;
+
+                leaf.appendChild(stem);
+                leaf.appendChild(content);
+                plantElement.appendChild(leaf);
+
+                leaf.addEventListener('mouseenter', () => this.showLeafReflection(memory));
+                leaf.addEventListener('mouseleave', () => this.hideLeafReflection());
+
+                this.leafCount++;
+                this.playGentleSound();
+            }
+
+            createPlantStem(plant) {
+                const plantContainer = document.getElementById('plantContainer');
+                const plantElement = document.createElement('div');
+                plantElement.className = 'plant-stem';
+                plantElement.setAttribute('data-plant-id', plant.id);
+                plantElement.style.left = `${plant.position.x}px`;
+                plantElement.style.top = `${plant.position.y}px`;
+                
+                const mainStem = document.createElement('div');
+                mainStem.className = 'main-stem';
+                plantElement.appendChild(mainStem);
+                
+                plantContainer.appendChild(plantElement);
+                return plantElement;
+            }
+
+            calculateLeafPositionOnStem(leafIndex, plant) {
+                const stemHeight = 200;
+                const leafSpacing = 30;
+                const baseY = plant.position.y - stemHeight;
+                const y = baseY + (leafIndex * leafSpacing);
+                
+                const x = plant.position.x + (leafIndex % 2 === 0 ? 20 : -20);
+                const angle = (leafIndex % 2 === 0 ? 15 : -15) + (Math.random() * 10 - 5);
+                
+                return { x, y, angle };
+            }
+
+            loadExistingMemories() {
+                this.memories.forEach((memory, index) => {
+                    setTimeout(() => {
+                        this.createLeaf(memory);
+                    }, index * 300);
+                });
+            }
+
+            showLeafReflection(memory) {
+                const reflection = this.leafReflections[memory.id % this.leafReflections.length];
+                const memoryText = memory.text;
+                
+                const reflectionModal = document.createElement('div');
+                reflectionModal.className = 'leaf-reflection-modal';
+                reflectionModal.innerHTML = `
+                    <div class="reflection-content">
+                        <div class="reflection-memory">"${memoryText}"</div>
+                        <div class="reflection-text">${reflection}</div>
+                    </div>
+                `;
+                
+                document.body.appendChild(reflectionModal);
+                
+                const leaf = document.querySelector(`[data-memory-id="${memory.id}"]`);
+                if (leaf) {
+                    const rect = leaf.getBoundingClientRect();
+                    reflectionModal.style.left = `${rect.left + rect.width + 10}px`;
+                    reflectionModal.style.top = `${rect.top}px`;
+                }
+            }
+
+            hideLeafReflection() {
+                const reflectionModal = document.querySelector('.leaf-reflection-modal');
+                if (reflectionModal) {
+                    reflectionModal.remove();
+                }
+            }
+
+            showQuote() {
+                const quoteText = document.getElementById('quoteText');
+                const randomQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
+                quoteText.textContent = randomQuote;
+                
+                const modal = document.getElementById('quoteModal');
+                modal.style.display = 'flex';
+                modal.style.animation = 'fadeIn 0.5s ease-out';
+            }
+
+            hideQuote() {
+                const modal = document.getElementById('quoteModal');
+                modal.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+
+            showGentleMessage(message) {
+                const messageEl = document.createElement('div');
+                messageEl.textContent = message;
+                messageEl.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(255, 255, 255, 0.9);
+                    padding: 1rem 2rem;
+                    border-radius: 20px;
+                    color: #2c5530;
+                    font-family: 'Crimson Text', serif;
+                    font-style: italic;
+                    z-index: 1000;
+                    box-shadow: 0 8px 32px rgba(44, 85, 48, 0.2);
+                    animation: gentleFloat 2s ease-out;
+                `;
+
+                document.body.appendChild(messageEl);
+
+                setTimeout(() => {
+                    messageEl.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => {
+                        document.body.removeChild(messageEl);
+                    }, 500);
+                }, 2000);
+            }
+
+            createFloatingParticles() {
+                setInterval(() => {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `
+                        position: fixed;
+                        width: 3px;
+                        height: 3px;
+                        background: rgba(144, 238, 144, 0.2);
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: 100vh;
+                        pointer-events: none;
+                        z-index: 1;
+                        animation: float 8s linear forwards;
+                    `;
+
+                    document.body.appendChild(particle);
+
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            document.body.removeChild(particle);
+                        }
+                    }, 8000);
+                }, 3000);
+            }
+
+            playGentleSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } catch (e) {
+                    // Silent fallback if audio fails
+                }
+            }
+
+            saveMemories() {
+                localStorage.setItem('gardenMemories', JSON.stringify(this.memories));
+            }
+
+            savePlants() {
+                localStorage.setItem('gardenPlants', JSON.stringify(this.plants));
+            }
+        }
+
+        // Initialize the garden when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DigitalGarden();
+        });
+
+        // Add some gentle ambient effects
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                const speed = (index + 1) * 0.5;
+                const x = (e.clientX * speed) / window.innerWidth;
+                const y = (e.clientY * speed) / window.innerHeight;
+                particle.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html> 

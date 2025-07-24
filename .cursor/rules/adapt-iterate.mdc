@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Offer ways to tweak visual properties without rewriting everything (e.g., “change color palette,” “add animation”).
+# Always support iterative exploration and explain how the user can experiment further.
+# Always make only necessary changes for the iterations instead of doing the entire codebase overhaul
+# Do not Force complete redesigns for minor tweaks
+# Always suggest 2-3 alternative approaches when making changes
+# Explain the visual impact of each option
+# Only modify the specific elements being changed
+# Keep existing layout structure intact
+# Maintain functional code (event handlers, logic, etc.)
+# Comment what you're changing and why

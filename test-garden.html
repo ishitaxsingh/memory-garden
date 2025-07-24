@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Garden</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f8ff;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #90EE90;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #98FB98;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌱 Digital Garden Test</h1>
+        
+        <div id="status"></div>
+        
+        <h3>Test Functions:</h3>
+        <button class="test-button" onclick="testLocalStorage()">Test Local Storage</button>
+        <button class="test-button" onclick="testPlantCreation()">Test Plant Creation</button>
+        <button class="test-button" onclick="testLeafCreation()">Test Leaf Creation</button>
+        <button class="test-button" onclick="clearGarden()">Clear Garden</button>
+        
+        <h3>Garden Status:</h3>
+        <div id="gardenStatus"></div>
+    </div>
+
+    <script>
+        function updateStatus(message, type = 'success') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function updateGardenStatus() {
+            const memories = JSON.parse(localStorage.getItem('gardenMemories')) || [];
+            const plants = JSON.parse(localStorage.getItem('gardenPlants')) || [];
+            
+            const statusDiv = document.getElementById('gardenStatus');
+            statusDiv.innerHTML = `
+                <p><strong>Memories:</strong> ${memories.length}</p>
+                <p><strong>Plants:</strong> ${plants.length}</p>
+                <p><strong>Latest Memory:</strong> ${memories.length > 0 ? memories[memories.length - 1].text.substring(0, 50) + '...' : 'None'}</p>
+            `;
+        }
+
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('test', 'working');
+                const test = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                
+                if (test === 'working') {
+                    updateStatus('✅ Local Storage is working!', 'success');
+                } else {
+                    updateStatus('❌ Local Storage test failed', 'error');
+                }
+            } catch (e) {
+                updateStatus('❌ Local Storage error: ' + e.message, 'error');
+            }
+        }
+
+        function testPlantCreation() {
+            try {
+                const plants = JSON.parse(localStorage.getItem('gardenPlants')) || [];
+                const newPlant = {
+                    id: Date.now(),
+                    position: { x: 100, y: 300 },
+                    createdAt: new Date().toISOString()
+                };
+                plants.push(newPlant);
+                localStorage.setItem('gardenPlants', JSON.stringify(plants));
+                updateStatus('✅ Plant created successfully!', 'success');
+                updateGardenStatus();
+            } catch (e) {
+                updateStatus('❌ Plant creation error: ' + e.message, 'error');
+            }
+        }
+
+        function testLeafCreation() {
+            try {
+                const memories = JSON.parse(localStorage.getItem('gardenMemories')) || [];
+                const newMemory = {
+                    id: Date.now(),
+                    text: 'Test memory ' + (memories.length + 1),
+                    timestamp: new Date().toISOString(),
+                    plantId: Date.now(),
+                    leafIndex: memories.length
+                };
+                memories.push(newMemory);
+                localStorage.setItem('gardenMemories', JSON.stringify(memories));
+                updateStatus('✅ Leaf created successfully!', 'success');
+                updateGardenStatus();
+            } catch (e) {
+                updateStatus('❌ Leaf creation error: ' + e.message, 'error');
+            }
+        }
+
+        function clearGarden() {
+            try {
+                localStorage.removeItem('gardenMemories');
+                localStorage.removeItem('gardenPlants');
+                updateStatus('✅ Garden cleared!', 'success');
+                updateGardenStatus();
+            } catch (e) {
+                updateStatus('❌ Clear garden error: ' + e.message, 'error');
+            }
+        }
+
+        // Initialize status
+        updateGardenStatus();
+    </script>
+</body>
+</html> 

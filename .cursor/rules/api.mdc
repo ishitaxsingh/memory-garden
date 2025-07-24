@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Do not user any external api or dependency until its absolutely necessary. Your first approach should be to try and make the thing without any external api.
+# When the user mentions Adobe Firefly or any API, provide full working fetch/axios code with setup steps.
+# Add comments that explain where to insert their API key or modify parameters.
+# Suggest relevant API endpoints or capabilities based on the goal (e.g., image generation, vector manipulation).
+# Explain how to setup this api and why is it necessary in the simplest terms

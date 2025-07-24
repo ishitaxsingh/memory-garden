@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Prioritize HTML, CSS, JavaScript, and SVG code that is clean and minimal.
+# Avoid long boilerplate code unless explicitly asked.
+# Structure plugin code using official documentation patterns (e.g., Figma plugin manifest, Illustrator ExtendScript).
+# Refer to internet for up to date documentation on all the tech that you might be using.
+# Use online-friendly code that can run in platforms like CodePen, JSFiddle, or Glitch.
+# Keep the code extremely simple to use so that the users don't have to worry about compiling or building with some tool.

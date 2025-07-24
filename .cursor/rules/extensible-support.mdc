@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# When the user mentions “Figma plugin,” output UXP or manifest + main.js setup with clear instructions.
+# When the user mentions “Illustrator,” generate ExtendScript or UXP for that environment.
+# When the user mentions “Chrome extension,” include manifest.json and basic popup HTML/JS files.
+# Offer folder structure and where to place files in each case.
+# Add TODOs in the code where the user should customize.

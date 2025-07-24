@@ -1,0 +1,478 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 50%, #f5f5dc 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #2c5530;
+}
+
+.garden-container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sky-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60vh;
+    background: linear-gradient(180deg, 
+        rgba(173, 216, 230, 0.3) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(144, 238, 144, 0.1) 100%);
+    z-index: 1;
+}
+
+.garden-header {
+    text-align: center;
+    padding: 2rem 1rem;
+    z-index: 10;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.garden-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: #2c5530;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(44, 85, 48, 0.1);
+    animation: gentleFloat 6s ease-in-out infinite;
+}
+
+.garden-subtitle {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #5a7c65;
+    opacity: 0.8;
+}
+
+.garden-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: linear-gradient(180deg, 
+        rgba(139, 69, 19, 0.1) 0%,
+        rgba(160, 82, 45, 0.2) 50%,
+        rgba(101, 67, 33, 0.3) 100%);
+    z-index: 2;
+}
+
+.soil-texture {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(101, 67, 33, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(101, 67, 33, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 40%, rgba(101, 67, 33, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px, 30px 30px, 20px 20px;
+}
+
+.plant-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 5;
+    padding-bottom: 2rem;
+    overflow: hidden;
+}
+
+.leaf {
+    position: absolute;
+    width: 100px;
+    height: 70px;
+    background: linear-gradient(135deg, 
+        #90EE90 0%, 
+        #98FB98 30%, 
+        #9ACD32 70%, 
+        #6B8E23 100%);
+    border-radius: 0 50% 50% 50%;
+    transform-origin: 0 50%;
+    animation: leafGrow 3s ease-out forwards;
+    box-shadow: 0 4px 8px rgba(44, 85, 48, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 4;
+}
+
+.leaf:hover {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 6px 12px rgba(44, 85, 48, 0.3);
+}
+
+.leaf::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 100px;
+    height: 60px;
+    background: linear-gradient(135deg, 
+        rgba(144, 238, 144, 0.8) 0%, 
+        rgba(152, 251, 152, 0.6) 50%, 
+        rgba(154, 205, 50, 0.4) 100%);
+    border-radius: 0 40% 40% 40%;
+    z-index: -1;
+}
+
+
+
+.leaf-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.6rem;
+    color: #2c5530;
+    line-height: 1.2;
+    overflow: hidden;
+    word-wrap: break-word;
+    opacity: 0;
+    animation: contentFadeIn 1s ease-out 2s forwards;
+}
+
+.memory-input-section {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    width: 90%;
+    max-width: 500px;
+}
+
+.input-container {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(44, 85, 48, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.memory-textarea {
+    flex: 1;
+    min-height: 60px;
+    max-height: 120px;
+    padding: 0.8rem;
+    border: 2px solid rgba(144, 238, 144, 0.3);
+    border-radius: 15px;
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+    color: #2c5530;
+    background: rgba(255, 255, 255, 0.8);
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.memory-textarea:focus {
+    outline: none;
+    border-color: #90EE90;
+    box-shadow: 0 0 0 3px rgba(144, 238, 144, 0.2);
+}
+
+.add-memory-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.8rem 1.2rem;
+    background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+    border: none;
+    border-radius: 15px;
+    color: #2c5530;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(144, 238, 144, 0.3);
+}
+
+.add-memory-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(144, 238, 144, 0.4);
+}
+
+.btn-text {
+    font-size: 0.8rem;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.water-section {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 20;
+}
+
+.water-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
+    border: none;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    color: #2c5530;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
+}
+
+.water-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(135, 206, 235, 0.4);
+}
+
+.water-icon {
+    font-size: 1.5rem;
+}
+
+.water-text {
+    font-size: 0.7rem;
+}
+
+.quote-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.quote-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 3rem;
+    border-radius: 20px;
+    max-width: 600px;
+    margin: 2rem;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(44, 85, 48, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #2c5530;
+    margin-bottom: 1rem;
+}
+
+.close-quote-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #5a7c65;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-quote-btn:hover {
+    background: rgba(44, 85, 48, 0.1);
+    color: #2c5530;
+}
+
+.floating-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(144, 238, 144, 0.3);
+    border-radius: 50%;
+    animation: float 8s infinite linear;
+}
+
+.particle:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 12s;
+}
+
+.particle:nth-child(2) {
+    left: 20%;
+    animation-delay: 2s;
+    animation-duration: 10s;
+}
+
+.particle:nth-child(3) {
+    left: 70%;
+    animation-delay: 4s;
+    animation-duration: 14s;
+}
+
+.particle:nth-child(4) {
+    left: 80%;
+    animation-delay: 6s;
+    animation-duration: 11s;
+}
+
+.particle:nth-child(5) {
+    left: 50%;
+    animation-delay: 8s;
+    animation-duration: 13s;
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes leafGrow {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(0.8) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+
+
+/* Leaf reflection modal styles */
+.leaf-reflection-modal {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(44, 85, 48, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-family: 'Crimson Text', serif;
+    color: #2c5530;
+    z-index: 1000;
+    max-width: 250px;
+    animation: fadeIn 0.3s ease-out;
+    backdrop-filter: blur(5px);
+}
+
+.reflection-memory {
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #5a7c65;
+}
+
+.reflection-text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .garden-title {
+        font-size: 2rem;
+    }
+    
+    .input-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .water-btn {
+        width: 60px;
+        height: 60px;
+        padding: 0.5rem;
+    }
+    
+    .water-text {
+        font-size: 0.6rem;
+    }
+    
+    .quote-content {
+        padding: 2rem;
+        margin: 1rem;
+    }
+    
+    .quote-text {
+        font-size: 1.1rem;
+    }
+    
+    .leaf-reflection-modal {
+        max-width: 200px;
+        padding: 0.8rem;
+    }
+} 

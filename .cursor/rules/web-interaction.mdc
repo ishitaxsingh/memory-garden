@@ -1,0 +1,9 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# If asked to create animations, default to CSS transitions or GSAP for simple, expressive effects.
+# If working with SVG, use inline SVG with IDs so it can be animated easily.
+# If the user wants to “interact with vectors” or “manipulate shapes,” use Canvas or SVG and explain how it works.
+# Use mouse/touch interactions that feel intuitive and modern.
