@@ -72,7 +72,6 @@ class DigitalGarden {
     setupEventListeners() {
         const addMemoryBtn = document.getElementById('addMemoryBtn');
         const memoryInput = document.getElementById('memoryInput');
-        const waterBtn = document.getElementById('waterBtn');
         const closeQuoteBtn = document.getElementById('closeQuoteBtn');
         const quoteModal = document.getElementById('quoteModal');
 
@@ -84,7 +83,6 @@ class DigitalGarden {
             }
         });
 
-        waterBtn.addEventListener('click', () => this.showQuote());
         closeQuoteBtn.addEventListener('click', () => this.hideQuote());
         quoteModal.addEventListener('click', (e) => {
             if (e.target === quoteModal) {
@@ -146,7 +144,7 @@ class DigitalGarden {
 
 
     createLeaf(memory) {
-        console.log('🌿 Creating leaf for memory:', memory.text);
+        console.log('🌱 Creating seed for memory:', memory.text);
         
         const plantContainer = document.getElementById('plantContainer');
         if (!plantContainer) {
@@ -154,19 +152,20 @@ class DigitalGarden {
             return;
         }
 
-        // Calculate floating leaf position
-        const leafPosition = this.calculateFloatingLeafPosition();
-        console.log('🌿 Leaf position:', leafPosition);
+        // Calculate floating seed position
+        const seedPosition = this.calculateFloatingSeedPosition();
+        console.log('🌱 Seed position:', seedPosition);
         
-        const leaf = document.createElement('div');
-        leaf.className = 'leaf floating-leaf';
-        leaf.style.left = `${leafPosition.x}px`;
-        leaf.style.top = `${leafPosition.y}px`;
-        leaf.style.transform = `rotate(${leafPosition.angle}deg)`;
-        leaf.setAttribute('data-memory-id', memory.id);
-        leaf.setAttribute('data-user-id', memory.userId);
+        const seed = document.createElement('div');
+        seed.className = 'leaf floating-leaf';
+        seed.style.left = `${seedPosition.x}px`;
+        seed.style.top = `${seedPosition.y}px`;
+        seed.style.transform = `rotate(${seedPosition.angle}deg)`;
+        seed.setAttribute('data-memory-id', memory.id);
+        seed.setAttribute('data-user-id', memory.userId);
+        seed.setAttribute('data-is-seed', 'true');
 
-        // Create leaf content with date
+        // Create seed content with date
         const content = document.createElement('div');
         content.className = 'leaf-content';
         
@@ -182,48 +181,119 @@ class DigitalGarden {
         dateElement.textContent = memory.date;
         content.appendChild(dateElement);
 
-        leaf.appendChild(content);
-        plantContainer.appendChild(leaf);
+        seed.appendChild(content);
+        plantContainer.appendChild(seed);
 
-        console.log('🌿 Leaf created and added to garden');
+        console.log('🌱 Seed created and added to garden');
 
-        // Add hover event for leaf-specific reflection
-        leaf.addEventListener('mouseenter', () => this.showLeafReflection(memory));
-        leaf.addEventListener('mouseleave', () => this.hideLeafReflection());
+        // Add click event for seed selection
+        seed.addEventListener('click', () => this.selectSeed(seed, memory));
+        seed.addEventListener('mouseenter', () => this.showSeedReflection(memory));
+        seed.addEventListener('mouseleave', () => this.hideSeedReflection());
 
         this.leafCount++;
-        console.log('🌿 Total leaf count:', this.leafCount);
+        console.log('🌱 Total seed count:', this.leafCount);
 
         // Gentle sound effect
         this.playGentleSound();
     }
 
-
-
-    calculateFloatingLeafPosition() {
-        const container = document.getElementById('plantContainer');
-        const containerRect = container.getBoundingClientRect();
+    selectSeed(seed, memory) {
+        // Show water can
+        this.showWaterCan();
         
-        // Create a more natural floating distribution
-        const angle = (this.leafCount * 137.5) % 360; // Golden angle
-        const radius = 80 + (this.leafCount * 15); // Smaller radius for floating
-        const x = containerRect.width / 2 + Math.cos(angle * Math.PI / 180) * radius;
-        const y = containerRect.height / 2 + Math.sin(angle * Math.PI / 180) * radius;
-        const rotation = (this.leafCount * 30) % 360; // Natural rotation
+        // Store selected seed
+        this.selectedSeed = { element: seed, memory: memory };
         
-        return { x, y, angle: rotation };
+        // Highlight the selected seed
+        seed.style.transform = 'scale(1.2) rotate(5deg)';
+        seed.style.boxShadow = '0 8px 16px rgba(139, 69, 19, 0.5)';
+        
+        this.showGentleMessage('Click the water can to grow this seed into a plant... 🌱');
     }
 
-    loadExistingMemories() {
-        this.memories.forEach((memory, index) => {
-            // Stagger the loading animation
-            setTimeout(() => {
-                this.createLeaf(memory);
-            }, index * 300);
-        });
+    showWaterCan() {
+        // Create water can if it doesn't exist
+        if (!this.waterCan) {
+            this.waterCan = document.createElement('button');
+            this.waterCan.className = 'water-can';
+            this.waterCan.innerHTML = '🚿';
+            this.waterCan.addEventListener('click', () => this.waterSeed());
+            document.body.appendChild(this.waterCan);
+        }
+        
+        this.waterCan.style.display = 'block';
     }
 
-    showLeafReflection(memory) {
+    hideWaterCan() {
+        if (this.waterCan) {
+            this.waterCan.style.display = 'none';
+        }
+    }
+
+    waterSeed() {
+        if (!this.selectedSeed) return;
+        
+        const { element: seed, memory } = this.selectedSeed;
+        const plantContainer = document.getElementById('plantContainer');
+        
+        // Get seed position
+        const rect = seed.getBoundingClientRect();
+        const containerRect = plantContainer.getBoundingClientRect();
+        const x = rect.left - containerRect.left + rect.width / 2;
+        const y = rect.top - containerRect.top + rect.height / 2;
+        
+        // Remove the seed
+        seed.remove();
+        
+        // Create plant
+        this.createPlant(memory, x, y);
+        
+        // Hide water can
+        this.hideWaterCan();
+        
+        // Clear selection
+        this.selectedSeed = null;
+        
+        this.showGentleMessage('Seed has grown into a beautiful plant! 🌿');
+        this.playGentleSound();
+    }
+
+    createPlant(memory, x, y) {
+        const plantContainer = document.getElementById('plantContainer');
+        const plant = document.createElement('div');
+        plant.className = 'plant';
+        plant.style.left = `${x - 60}px`; // Center the plant
+        plant.style.top = `${y - 75}px`; // Position above where seed was
+        
+        // Create plant content
+        const content = document.createElement('div');
+        content.className = 'leaf-content';
+        content.style.color = '#2c5530';
+        
+        // Add memory text
+        const memoryTextElement = document.createElement('div');
+        memoryTextElement.className = 'memory-text';
+        memoryTextElement.textContent = memory.text;
+        memoryTextElement.style.color = '#2c5530';
+        content.appendChild(memoryTextElement);
+        
+        // Add date
+        const dateElement = document.createElement('div');
+        dateElement.className = 'memory-date';
+        dateElement.textContent = memory.date;
+        dateElement.style.color = '#4a7c59';
+        content.appendChild(dateElement);
+        
+        plant.appendChild(content);
+        plantContainer.appendChild(plant);
+        
+        // Add hover events
+        plant.addEventListener('mouseenter', () => this.showPlantReflection(memory));
+        plant.addEventListener('mouseleave', () => this.hidePlantReflection());
+    }
+
+    showSeedReflection(memory) {
         const reflection = this.leafReflections[memory.id % this.leafReflections.length];
         const memoryText = memory.text;
         const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
@@ -258,11 +328,90 @@ class DigitalGarden {
         }, 100);
     }
 
-    hideLeafReflection() {
+    hideSeedReflection() {
         const reflectionModal = document.querySelector('.leaf-reflection-modal');
         if (reflectionModal) {
-            reflectionModal.remove();
+            reflectionModal.style.opacity = '0';
+            reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(() => {
+                if (reflectionModal.parentNode) {
+                    reflectionModal.parentNode.removeChild(reflectionModal);
+                }
+            }, 300);
         }
+    }
+
+    showPlantReflection(memory) {
+        const reflection = this.leafReflections[memory.id % this.leafReflections.length];
+        const memoryText = memory.text;
+        const memoryDate = memory.date || new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const reflectionModal = document.createElement('div');
+        reflectionModal.className = 'leaf-reflection-modal';
+        reflectionModal.innerHTML = `
+            <div class="reflection-memory">"${memoryText}"</div>
+            <div class="reflection-date">${memoryDate}</div>
+            <div class="reflection-text">${reflection}</div>
+        `;
+        
+        document.body.appendChild(reflectionModal);
+        
+        // Show with gentle animation
+        setTimeout(() => {
+            reflectionModal.style.display = 'block';
+            reflectionModal.style.opacity = '0';
+            reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(() => {
+                reflectionModal.style.transition = 'all 0.3s ease';
+                reflectionModal.style.opacity = '1';
+                reflectionModal.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10);
+        }, 100);
+    }
+
+    hidePlantReflection() {
+        const reflectionModal = document.querySelector('.leaf-reflection-modal');
+        if (reflectionModal) {
+            reflectionModal.style.opacity = '0';
+            reflectionModal.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(() => {
+                if (reflectionModal.parentNode) {
+                    reflectionModal.parentNode.removeChild(reflectionModal);
+                }
+            }, 300);
+        }
+    }
+
+    calculateFloatingSeedPosition() {
+        const container = document.getElementById('plantContainer');
+        const containerRect = container.getBoundingClientRect();
+        
+        // Create a more natural floating distribution for seeds
+        const angle = (this.leafCount * 137.5) % 360; // Golden angle
+        const radius = 100 + (this.leafCount * 20); // Growing radius
+        const x = containerRect.width / 2 + Math.cos(angle * Math.PI / 180) * radius;
+        const y = containerRect.height / 2 + Math.sin(angle * Math.PI / 180) * radius;
+        const rotation = (this.leafCount * 30) % 360; // Natural rotation
+        
+        return { x, y, angle: rotation };
+    }
+
+    loadExistingMemories() {
+        this.memories.forEach((memory, index) => {
+            // Stagger the loading animation
+            setTimeout(() => {
+                this.createLeaf(memory);
+            }, index * 300);
+        });
     }
 
     showMemoryDetails(memory) {

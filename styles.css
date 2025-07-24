@@ -79,44 +79,44 @@ body {
 
 .leaf {
     position: absolute;
-    width: 100px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     background: linear-gradient(135deg, 
-        #90EE90 0%, 
-        #98FB98 30%, 
-        #9ACD32 70%, 
-        #6B8E23 100%);
-    border-radius: 0 50% 50% 50%;
-    transform-origin: 0 50%;
-    animation: leafGrow 3s ease-out forwards;
-    box-shadow: 0 4px 8px rgba(44, 85, 48, 0.2);
+        #8B4513 0%, 
+        #A0522D 30%, 
+        #CD853F 70%, 
+        #DAA520 100%);
+    border-radius: 50%;
+    transform-origin: center;
+    animation: seedGrow 3s ease-out forwards;
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
     cursor: pointer;
     transition: all 0.3s ease;
     z-index: 4;
 }
 
 .floating-leaf {
-    animation: leafGrow 3s ease-out forwards, gentleFloat 8s ease-in-out infinite;
+    animation: seedGrow 3s ease-out forwards, gentleFloat 8s ease-in-out infinite;
 }
 
 .leaf:hover {
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 6px 12px rgba(44, 85, 48, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4);
     animation-play-state: paused;
 }
 
 .leaf::before {
     content: '';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 100px;
-    height: 60px;
+    top: 8px;
+    left: 8px;
+    width: 44px;
+    height: 44px;
     background: linear-gradient(135deg, 
-        rgba(144, 238, 144, 0.8) 0%, 
-        rgba(152, 251, 152, 0.6) 50%, 
-        rgba(154, 205, 50, 0.4) 100%);
-    border-radius: 0 40% 40% 40%;
+        rgba(139, 69, 19, 0.8) 0%, 
+        rgba(160, 82, 45, 0.6) 50%, 
+        rgba(205, 133, 63, 0.4) 100%);
+    border-radius: 50%;
     z-index: -1;
 }
 
@@ -125,14 +125,14 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 85%;
-    height: 70%;
+    width: 90%;
+    height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     color: #2c5530;
     line-height: 1.2;
     overflow: hidden;
@@ -142,17 +142,18 @@ body {
 }
 
 .memory-text {
-    font-size: 0.6rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.5rem;
+    margin-bottom: 0.1rem;
     font-weight: 500;
+    color: #8B4513;
 }
 
 .memory-date {
-    font-size: 0.45rem;
-    color: #4a7c59;
-    opacity: 0.8;
+    font-size: 0.4rem;
+    color: #A0522D;
+    opacity: 0.9;
     font-style: italic;
-    margin-top: 0.1rem;
+    margin-top: 0.05rem;
 }
 
 .memory-input-section {
@@ -448,40 +449,142 @@ body {
 /* Leaf reflection modal styles */
 .leaf-reflection-modal {
     position: fixed;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(44, 85, 48, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    font-family: 'Crimson Text', serif;
-    color: #2c5530;
-    z-index: 1000;
-    max-width: 250px;
-    animation: fadeIn 0.3s ease-out;
-    backdrop-filter: blur(5px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.98);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(44, 85, 48, 0.3);
+    z-index: 50;
+    max-width: 500px;
+    text-align: center;
+    display: none;
+    border: 2px solid rgba(144, 238, 144, 0.2);
 }
 
 .reflection-memory {
     font-family: 'Crimson Text', serif;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #2c5530;
     margin-bottom: 1rem;
     font-style: italic;
+    line-height: 1.4;
 }
 
 .reflection-date {
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #4a7c59;
-    opacity: 0.8;
+    opacity: 0.9;
     font-style: italic;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
 }
 
 .reflection-text {
     font-family: 'Playfair Display', serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #5a7c65;
-    line-height: 1.4;
+    line-height: 1.5;
+}
+
+.water-can {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 20;
+    display: none;
+    background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    color: #2c5530;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
+    font-size: 1.5rem;
+}
+
+.water-can:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(135, 206, 235, 0.4);
+}
+
+.plant {
+    position: absolute;
+    width: 120px;
+    height: 150px;
+    background: linear-gradient(135deg, 
+        #228B22 0%, 
+        #32CD32 30%, 
+        #90EE90 70%, 
+        #98FB98 100%);
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+    animation: plantGrow 2s ease-out forwards;
+    box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
+    z-index: 5;
+}
+
+.plant::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 60px;
+    background: linear-gradient(180deg, #228B22 0%, #32CD32 100%);
+    border-radius: 4px;
+}
+
+.plant::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 60px;
+    background: linear-gradient(135deg, 
+        rgba(34, 139, 34, 0.8) 0%, 
+        rgba(50, 205, 50, 0.6) 50%, 
+        rgba(144, 238, 144, 0.4) 100%);
+    border-radius: 50% 50% 0 0;
+    z-index: -1;
+}
+
+@keyframes seedGrow {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(0.8) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes plantGrow {
+    0% {
+        transform: scale(0) translateY(20px);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(0.8) translateY(10px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
 }
 
 @media (max-width: 768px) {
